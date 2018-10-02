@@ -13,7 +13,7 @@ def options(opt):
 
     opt.add_option('--with-tests',
                    action = 'store_true',
-                   default = False,
+                   default = True,
                    dest = 'with_tests',
                    help = '''Compile unit tests''')
 
@@ -32,6 +32,22 @@ def configure(conf):
     conf.env.append_value('CXXFLAGS', '-std=c++14');
 
 def build(bld):
+    bld(
+        features = 'c cxx cshlib',
+        source   = bld.path.ant_glob('crypto/**/*.cpp', excl = ['crypto/**/*.m.cpp', 'crypto/**/*.t.cpp']),
+        use      = 'gtest cryptopp',
+        target   = 'proxypp_crypto',
+        export_includes = '.',
+        includes = 'crypto'
+    )
+    bld(
+        features = 'c cxx cshlib',
+        source   = bld.path.ant_glob('transport/**/*.cpp', excl = ['transport/**/*.m.cpp', 'transport/**/*.t.cpp']),
+        use      = 'gtest cryptopp',
+        target   = 'proxypp_transport',
+        export_includes = '.',
+        includes = 'transport'
+    )
     if bld.env['WITH_TESTS']:
         bld(
             features = 'c cxx cxxprogram',
@@ -39,6 +55,6 @@ def build(bld):
             use      = 'gtest cryptopp',
             target   = 'tests',
             export_includes = '.',
-            includes = 'crypto'
+            includes = 'crypto transport'
         )
         

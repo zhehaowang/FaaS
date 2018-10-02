@@ -1,3 +1,6 @@
+#ifndef INCLUDED_CRYPTOR_AES
+#define INCLUDED_CRYPTOR_AES
+
 #include <cryptor.h>
 
 #include <iostream>
@@ -37,3 +40,5 @@ class CryptorAES : public Cryptor {
 
 }
 }
+
+#endif
