@@ -3,6 +3,7 @@
 # Deploy latest ss-server with silent_drop_replay customization to avoid easy detection.
 # tcp_only, chacha20-ietf-poly1305, random pwd
 # Ubuntu 20.04
+# wget -O - https://raw.githubusercontent.com/zhehaowang/FaaS/master/ssrust.sh | bash
 
 green='\033[0;32m'
 red='\033[0;31m'
@@ -30,6 +31,7 @@ dockername="ssserver-rust"
 # https://github.com/net4people/bbs/issues/69
 # https://github.com/net4people/bbs/issues/22
 # for this reason we set silent_drop_replay false by default
+# \"silent_drop_replay\": false,
 echo "
 {
     \"server\":\"0.0.0.0\",
@@ -37,7 +39,6 @@ echo "
     \"server_port\":$port,
     \"local_port\":1080,
     \"password\":\"$pwd\",
-    \"silent_drop_replay\": false,
     \"timeout\":120,
     \"method\":\"$enc\"
 }" > ~/ss.conf
