@@ -45,10 +45,10 @@ sudo docker run --name $dockername --restart always -p $port:$port/tcp -v ~/ss.c
 # sudo docker container ls
 containerid=$(sudo docker ps -f name=$dockername --format {{.ID}})
 
-echo "${yellow}Docker log:${nc}"
+echo -e "${yellow}Docker log:${nc}"
 sudo docker logs $containerid
 
-echo "
+echo -e "
 ${green}Done${nc}!
 password:           ${yellow}${pwd}${nc},
 port:               ${yellow}${port}${nc},
