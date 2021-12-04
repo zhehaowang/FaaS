@@ -24,7 +24,7 @@ sudo docker pull ghcr.io/shadowsocks/ssserver-rust:latest
 
 pwd=$(openssl rand -base64 16)
 enc="chacha20-ietf-poly1305"
-dockername="ssserver-rust"
+dockername="ssserver-rust-$port"
 
 # as of 20211204, silently dropping replay packets seemed to have made shadowsocks easily detectable:
 # https://github.com/shadowsocks/shadowsocks-rust/pull/556
@@ -61,6 +61,9 @@ if [ $ret -eq 0 ]; then
     port:               ${yellow}${port}${nc},
     docker instance id: ${yellow}${containerid}${nc},
     encryption:         ${yellow}${enc}${nc}"
+
+    mkdir -p ~/ss/
+    cat "${pwd}" > ~/ss/$dockername
 else
     echo -e "${red}Docker instance failed to start, ret ${ret} ${nc}"
 fi
