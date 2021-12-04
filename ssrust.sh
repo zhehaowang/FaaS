@@ -3,6 +3,11 @@
 # Deploy latest ss-server with silent_drop_replay customization to avoid easy detection.
 # Ubuntu 20.04
 
+green='\033[0;32m'
+red='\033[0;31m'
+yellow='\033[1;33m'
+nc='\033[0m' # No Color'
+
 port=443
 if [ $# -eq 0 ]; then
     echo "No port specified, using default 443"
@@ -11,7 +16,7 @@ else
 fi
 
 sudo apt update
-sudo apt install docker.io
+sudo apt install docker.io --yes
 sudo apt-get install rng-tools
 sudo docker pull ghcr.io/shadowsocks/ssserver-rust:latest
 
@@ -40,14 +45,15 @@ sudo docker run --name $dockername --restart always -p $port:$port/tcp -v ~/ss.c
 # sudo docker container ls
 containerid=$(sudo docker ps -f name=$dockername --format {{.ID}})
 
+echo "${yellow}Docker log:${nc}"
 sudo docker logs $containerid
 
 echo "
-Done!
-password:           $pwd,
-port:               $port,
-docker instance id: $containerid,
-encryption:         $enc"
+${green}Done${nc}!
+password:           ${yellow}${pwd}${nc},
+port:               ${yellow}${port}${nc},
+docker instance id: ${yellow}${containerid}${nc},
+encryption:         ${yellow}${enc}${nc}"
 
 # on mac to test a port
 # nc -vnz [ip] $port
