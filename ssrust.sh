@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# Deploy latest ss-server with silent_drop_replay customization to avoid easy detection.
 # Ubuntu 20.04
 
 port=443
@@ -11,12 +12,12 @@ fi
 
 sudo apt update
 sudo apt install docker.io
+sudo apt-get install rng-tools
 sudo docker pull ghcr.io/shadowsocks/ssserver-rust:latest
 
 pwd=$(openssl rand -base64 16)
-echo "
-password: $pwd,
-port:     $port"
+enc="chacha20-ietf-poly1305"
+dockername="ssserver-rust"
 
 # as of 20211204, silently dropping replay packets seemed to have made shadowsocks easily detectable:
 # https://github.com/shadowsocks/shadowsocks-rust/pull/556
@@ -32,11 +33,28 @@ echo "
     \"password\":\"$pwd\",
     \"silent_drop_replay\": false,
     \"timeout\":120,
-    \"method\":\"chacha20-ietf-poly1305\"
+    \"method\":\"$enc\"
 }" > ~/ss.conf
 
-sudo docker run --name ssserver-rust --restart always -p 443:443/tcp -v ~/ss.conf:/etc/shadowsocks-rust/config.json -dit ghcr.io/shadowsocks/ssserver-rust:latest
-sudo docker container ls
+sudo docker run --name $dockername --restart always -p $port:$port/tcp -v ~/ss.conf:/etc/shadowsocks-rust/config.json -dit ghcr.io/shadowsocks/ssserver-rust:latest
+# sudo docker container ls
+containerid=$(sudo docker ps -f name=$dockername --format {{.ID}})
+
+sudo docker logs $containerid
+
+echo "
+Done!
+password:           $pwd,
+port:               $port,
+docker instance id: $containerid,
+encryption:         $enc"
 
 # on mac to test a port
 # nc -vnz [ip] $port
+
+# verify listening on specified port
+# sudo lsof -i:$port
+
+# stop and cleanup docker container
+# sudo docker stop $containerid
+# sudo docker rm $containerid
