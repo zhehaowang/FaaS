@@ -15,3 +15,11 @@ ENV SS_METHOD xchacha20-ietf-poly1305
 
 # Configure container to run as an executable
 ENTRYPOINT ["ss-server -p $SS_SERVER_PORT -k $SS_PASSWORD -m $SS_METHOD"]
+
+
+docker run --name ssserver-rust \
+  --restart always \
+  -p 9002:9002/tcp \
+  -p 9002:9002/udp \
+  -v /etc/shadowsocks-libev/config1.json:/etc/shadowsocks-rust/config.json \
+  -dit ghcr.io/shadowsocks/ssserver-rust:latest
