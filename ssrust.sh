@@ -3,7 +3,7 @@
 # Deploy latest ss-server with silent_drop_replay customization to avoid easy detection.
 # tcp_only, chacha20-ietf-poly1305, random pwd
 # Ubuntu 20.04
-# wget -O - https://raw.githubusercontent.com/zhehaowang/FaaS/master/ssrust.sh | bash -s "-p 443 -s aws"
+# wget -O - https://raw.githubusercontent.com/zhehaowang/FaaS/master/ssrust.sh | bash /dev/stdin -p 443 -s aws
 
 green='\033[0;32m'
 red='\033[0;31m'
@@ -66,7 +66,7 @@ echo "
     \"timeout\":120,
     \"method\":\"$enc\",
     \"plugin\":\"\"
-}" > ~/ss/$dockername.conf
+}" > "~/ss/${dockername}.conf"
 
 sudo docker run --name $dockername --restart always -p $port:$port/tcp -v ~/ss/$dockername.conf:/etc/shadowsocks-rust/config.json -dit ghcr.io/shadowsocks/ssserver-rust:latest
 ret=$?
