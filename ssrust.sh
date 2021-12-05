@@ -25,6 +25,7 @@ while getopts ":s:p:a" opt; do
     p) port="$OPTARG"
     ;;
     a) update=0
+    ;;
     \?) echo "Invalid option -$OPTARG" >&2
     exit 1
     ;;
