@@ -57,7 +57,7 @@ mkdir -p ~/ss/
 # for this reason we set silent_drop_replay false by default
 # \"silent_drop_replay\": false,
 
-tee "~/ss/${dockername}.conf" <<EOF
+tee ~/"ss/${dockername}.conf" <<EOF
 {
     "server":"0.0.0.0",
     "mode":"tcp_only",
