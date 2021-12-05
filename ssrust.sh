@@ -56,17 +56,18 @@ fi
 # for this reason we set silent_drop_replay false by default
 # \"silent_drop_replay\": false,
 mkdir -p ~/ss/
-echo "
+tee "~/ss/${dockername}.conf" <<EOF
 {
-    \"server\":\"0.0.0.0\",
-    \"mode\":\"tcp_only\",
-    \"server_port\":$port,
-    \"local_port\":1080,
-    \"password\":\"$pwd\",
-    \"timeout\":120,
-    \"method\":\"$enc\",
-    \"plugin\":\"\"
-}" > "~/ss/${dockername}.conf"
+    "server":"0.0.0.0",
+    "mode":"tcp_only",
+    "server_port":$port,
+    "local_port":1080,
+    "password":"$pwd",
+    "timeout":120,
+    "method":"$enc",
+    "plugin":""
+}
+EOF
 
 sudo docker run --name $dockername --restart always -p $port:$port/tcp -v ~/ss/$dockername.conf:/etc/shadowsocks-rust/config.json -dit ghcr.io/shadowsocks/ssserver-rust:latest
 ret=$?
