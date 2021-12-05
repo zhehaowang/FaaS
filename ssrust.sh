@@ -4,6 +4,11 @@
 # tcp_only, chacha20-ietf-poly1305, random pwd
 # Ubuntu 20.04
 # wget -O - https://raw.githubusercontent.com/zhehaowang/FaaS/master/ssrust.sh | bash /dev/stdin -p 443 -s aws
+# 
+# for i in {10010..10100}; do
+#     ./ssrust.sh -p $i -s aws -a
+# done
+# 
 
 green='\033[0;32m'
 red='\033[0;31m'
@@ -12,12 +17,14 @@ nc='\033[0m' # No Color'
 
 port=443
 source="aws"
-while getopts ":s:p:" opt; do
+update=1
+while getopts ":s:p:a" opt; do
   case $opt in
     s) source="$OPTARG"
     ;;
     p) port="$OPTARG"
     ;;
+    a) update=0
     \?) echo "Invalid option -$OPTARG" >&2
     exit 1
     ;;
@@ -30,9 +37,12 @@ while getopts ":s:p:" opt; do
   esac
 done
 
-sudo apt update
-sudo apt install docker.io --yes
-sudo apt-get install rng-tools
+if [ $update -eq 1 ]; then
+    sudo apt update
+    sudo apt install docker.io --yes
+    sudo apt-get install rng-tools
+fi
+
 sudo docker pull ghcr.io/shadowsocks/ssserver-rust:latest
 
 pwd=$(openssl rand -base64 16)
