@@ -48,6 +48,7 @@ else
     echo -e "${yellow}Not on AWS, using ${serveraddr} to generate ss url ${nc}"
 fi
 
+mkdir -p ~/ss/
 
 # as of 20211204, silently dropping replay packets seemed to have made shadowsocks easily detectable:
 # https://github.com/shadowsocks/shadowsocks-rust/pull/556
@@ -55,7 +56,7 @@ fi
 # https://github.com/net4people/bbs/issues/22
 # for this reason we set silent_drop_replay false by default
 # \"silent_drop_replay\": false,
-mkdir -p ~/ss/
+
 tee "~/ss/${dockername}.conf" <<EOF
 {
     "server":"0.0.0.0",
